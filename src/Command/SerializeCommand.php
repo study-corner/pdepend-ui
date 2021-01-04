@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Dependencies;
 use App\Serialization\User;
+use App\Service\XmlClosureParser;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,45 +32,12 @@ class SerializeCommand extends Command
         $xml = file_get_contents($xmlFile);
 
         $simpleXml = simplexml_load_file($xmlFile);
-        $xmlParsed = $this->xmlToArray($simpleXml);
+        $xmlParser = new XmlClosureParser();
+        $parsedArray = $xmlParser->xmlToArray($simpleXml);
 
 //        $dependencies = $this->serializer->deserialize($xml, Dependencies::class, 'xml');
 
         return Command::SUCCESS;
-    }
-
-    private function xmlToArray(\SimpleXMLElement $xml): array
-    {
-        $parser = function (\SimpleXMLElement $xml, array $collection = []) use (&$parser) {
-            $nodes = $xml->children();
-            $attributes = $xml->attributes();
-
-            if (0 !== count($attributes)) {
-                foreach ($attributes as $attrName => $attrValue) {
-                    $collection['attributes'][$attrName] = strval($attrValue);
-                }
-            }
-
-            if (0 === $nodes->count()) {
-                $collection['value'] = strval($xml);
-                return $collection;
-            }
-
-            foreach ($nodes as $nodeName => $nodeValue) {
-                if (count($nodeValue->xpath('../' . $nodeName)) < 2) {
-                    $collection[$nodeName] = $parser($nodeValue);
-                    continue;
-                }
-
-                $collection[$nodeName][] = $parser($nodeValue);
-            }
-
-            return $collection;
-        };
-
-        return [
-            $xml->getName() => $parser($xml)
-        ];
     }
 
     private function getUserXml(): string
