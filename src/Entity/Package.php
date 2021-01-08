@@ -13,25 +13,26 @@ class Package
      */
     public string $packageName;
     /**
+     * @var PackageClass[]
      * @Serializer\Type("array<App\XML\Entity\PackageClass>")
      * @Serializer\SerializedName("class")
      */
     public array $packageClasses = [];
-
     /**
-     * @return string
+     * @var PackageInterface[]
      */
+    public array $packageInterfaces = [];
+
     public function getPackageName(): string
     {
         return $this->packageName;
     }
 
-    /**
-     * @param string $packageName
-     */
-    public function setPackageName(string $packageName): void
+    public function setPackageName(string $packageName): self
     {
         $this->packageName = $packageName;
+
+        return $this;
     }
 
     public function getPackageClasses(): array
@@ -39,8 +40,22 @@ class Package
         return $this->packageClasses;
     }
 
-    public function addPackageClass(PackageClass $packageClass): void
+    public function addPackageClass(PackageClass $packageClass): self
     {
         $this->packageClasses[] = $packageClass;
+
+        return $this;
+    }
+
+    public function getPackageInterfaces(): array
+    {
+        return $this->packageInterfaces;
+    }
+
+    public function addPackageInterface(PackageInterface $packageInterface): self
+    {
+        $this->packageInterfaces[] = $packageInterface;
+
+        return $this;
     }
 }

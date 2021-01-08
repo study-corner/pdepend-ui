@@ -19,16 +19,18 @@ class Dependencies
      * @var Package[]
      * @Serializer\Type("array<App\XML\Entity\Package>")
      */
-    private array $package = [];
+    private array $packages = [];
 
     public function getGenerated(): string
     {
         return $this->generated;
     }
 
-    public function setGenerated(string $generated): void
+    public function setGenerated(string $generated): self
     {
         $this->generated = $generated;
+
+        return $this;
     }
 
     public function getPdepend(): string
@@ -36,18 +38,22 @@ class Dependencies
         return $this->pdepend;
     }
 
-    public function setPdepend(string $pdepend): void
+    public function setPdepend(string $pdepend): self
     {
         $this->pdepend = $pdepend;
+
+        return $this;
     }
 
     public function getPackages(): array
     {
-        return $this->package;
+        return $this->packages;
     }
 
-    public function addPackage(Package $package): void
+    public function addPackage(Package $package): self
     {
-        $this->package[] = $package;
+        $this->packages[] = $package;
+
+        return $this;
     }
 }

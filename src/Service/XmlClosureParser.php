@@ -15,6 +15,7 @@ class XmlClosureParser
 
             if (!$this->hasNodes($nodes)) {
                 $collection['value'] = strval($xml);
+
                 return $collection;
             }
 
@@ -33,6 +34,7 @@ class XmlClosureParser
                 $collection['attributes'][$attrName] = strval($attrValue);
             }
         }
+
         return $collection;
     }
 

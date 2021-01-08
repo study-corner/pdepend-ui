@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-class Efferent extends Ferent
+class PackageInterface extends PackageItem
 {
 
 }
