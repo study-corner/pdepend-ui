@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Dependencies;
 use App\Serialization\User;
+use App\Service\DependenciesParser;
 use App\Service\XmlClosureParser;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -36,6 +37,10 @@ class SerializeCommand extends Command
         $parsedArray = $xmlParser->xmlToArray($simpleXml);
 
 //        $dependencies = $this->serializer->deserialize($xml, Dependencies::class, 'xml');
+
+        $dependenciesParser = new DependenciesParser();
+        $dependenciesParser->parse($simpleXml);
+        $dependencies = $dependenciesParser->getDependencies();
 
         return Command::SUCCESS;
     }

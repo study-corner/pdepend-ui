@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-abstract class Ferent
+abstract class Ferent implements FerentInterface
 {
     protected string $namespace = '';
     protected string $name = '';

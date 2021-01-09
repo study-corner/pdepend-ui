@@ -56,4 +56,9 @@ class Dependencies
 
         return $this;
     }
+
+    public function hasAllProperties(): bool
+    {
+        return null !== $this->generated && null !== $this->pdepend;
+    }
 }

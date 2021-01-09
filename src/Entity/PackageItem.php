@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-abstract class PackageItem
+abstract class PackageItem implements PackageItemInterface
 {
     protected string $name = '';
     protected array $efferents = [];
@@ -39,7 +39,7 @@ abstract class PackageItem
         return $this->afferents;
     }
 
-    public function addAfferents(Afferent $afferent): self
+    public function addAfferent(Afferent $afferent): self
     {
         $this->afferents[] = $afferent;
 
