@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dep index{% endblock %}
+
+{% block body %}
+    <h1>Dependencies</h1>
+
+    <table>
+        <tbody>
+        {% for package in dependencies.getPackages() %}
+            <tr class="package-border">
+                <td><strong>Package name</strong></td>
+                <td><strong>Package class (instability)</strong></td>
+                <td><strong>Out</strong></td>
+                <td><strong>In</strong></td>
+            </tr>
+            <tr>
+                <td>{{ package.getPackageName() }}</td>
+            </tr>
+            {% for packageClass in package.getPackageClasses() %}
+                {% set packageClassStability = packageClass.getStability() %}
+                <tr>
+                    <td></td><td class="tooltip"><span class="tooltiptext">{{ packageClass.getFile() }}</span>{{ packageClass.getName() }} ({{ packageClassStability }})</td>
+                </tr>
+                <tr>
+                    <td></td><td></td><td>
+                        <table>
+                            {% for efferent in packageClass.getEfferents() %}
+                                {% set namespace = efferent.getNamespace() %}
+                                {% set stability = efferent.getStability() %}
+                                {% if namespace is empty or stability < 0 %}
+                                    {% set globalNamespace = 'global-namespace' %}
+                                {% else %}
+                                    {% set globalNamespace = '' %}
+                                {% endif %}
+                                {% if packageClassStability < stability %}
+                                    {% set violates = 'stability-violates' %}
+                                {% else %}
+                                    {% set violates = '' %}
+                                {% endif %}
+                                <tr>
+                                    <td class="tooltip {{ globalNamespace}} {{ violates }}"><span class="tooltiptext">{{ namespace }}</span>{{ efferent.getName() }} ({{ stability }})</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            {% for afferent in packageClass.getAfferents() %}
+                                {% set namespace = afferent.getNamespace() %}
+                                {% set stability = afferent.getStability() %}
+                                {% if namespace is empty or stability < 0 %}
+                                    {% set globalNamespace = 'global-namespace' %}
+                                {% else %}
+                                    {% set globalNamespace = '' %}
+                                {% endif %}
+                                {% if packageClassStability > stability %}
+                                    {% set violates = 'stability-violates' %}
+                                {% else %}
+                                    {% set violates = '' %}
+                                {% endif %}
+                                <tr>
+                                    <td class="tooltip {{ globalNamespace}} {{ violates }}"><span class="tooltiptext">{{ namespace }}</span>{{ afferent.getName() }} ({{ stability }})</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            {% if package.hasInterfaces %}
+            <tr>
+                <td></td><td><strong>Package interface (instability)</strong></td>
+            </tr>
+            {% endif %}
+
+            {% for packageInterface in package.getPackageInterfaces() %}
+                {% set packageInterfaceStability = packageInterface.getStability() %}
+                <tr>
+                    <td></td><td class="tooltip"><span class="tooltiptext">{{ packageInterface.getFile() }}</span>{{ packageInterface.getName() }} ({{ packageInterfaceStability }})</td>
+                </tr>
+                <tr>
+                    <td></td><td></td><td>
+                        <table>
+                            {% for efferent in packageInterface.getEfferents() %}
+                                {% set namespace = efferent.getNamespace() %}
+                                {% set stability = efferent.getStability() %}
+                                {% if namespace is empty or stability < 0 %}
+                                    {% set globalNamespace = 'global-namespace' %}
+                                {% else %}
+                                    {% set globalNamespace = '' %}
+                                {% endif %}
+                                {% if packageInterfaceStability < stability %}
+                                    {% set violates = 'stability-violates' %}
+                                {% else %}
+                                    {% set violates = '' %}
+                                {% endif %}
+                                <tr>
+                                    <td class="tooltip {{ globalNamespace}} {{ violates }}"><span class="tooltiptext">{{ namespace }}</span>{{ efferent.getName() }} ({{ stability }})</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            {% for afferent in packageInterface.getAfferents() %}
+                                {% set namespace = afferent.getNamespace() %}
+                                {% set stability = afferent.getStability() %}
+                                {% if namespace is empty or stability < 0 %}
+                                    {% set globalNamespace = 'global-namespace' %}
+                                {% else %}
+                                    {% set globalNamespace = '' %}
+                                {% endif %}
+                                {% if packageInterfaceStability > stability %}
+                                    {% set violates = 'stability-violates' %}
+                                {% else %}
+                                    {% set violates = '' %}
+                                {% endif %}
+                                <tr>
+                                    <td class="tooltip {{ violates }}"><span class="tooltiptext">{{ namespace }}</span>{{ afferent.getName() }} ({{ stability }})</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

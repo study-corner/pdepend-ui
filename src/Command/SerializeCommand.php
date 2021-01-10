@@ -28,7 +28,7 @@ class SerializeCommand extends Command
     {
 //        $user = $this->serializer->deserialize($this->getUserXml(), User::class, 'xml');
 
-        $dir = realpath(__DIR__.'/../../build');
+        $dir = realpath(__DIR__ . '/../../build');
         $xmlFile = $dir . '/dependency.xml';
         $xml = file_get_contents($xmlFile);
 
@@ -41,6 +41,7 @@ class SerializeCommand extends Command
         $dependenciesParser = new DependenciesParser();
         $dependenciesParser->parse($simpleXml);
         $dependencies = $dependenciesParser->getDependencies();
+        $dependencies->calculateStability();
 
         return Command::SUCCESS;
     }

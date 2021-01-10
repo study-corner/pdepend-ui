@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <style>
+            td {
+                vertical-align: top;
+            }
+
+            tr.package-border td {
+                border-top: 1px solid grey;
+                padding-top: 15px!important;
+                padding-bottom: 20px!important;
+            }
+
+            .tooltip {
+                position: relative;
+                display: inline-block;
+            }
+
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                background-color: black;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px 5px;
+
+                /* Position the tooltip */
+                position: absolute;
+                z-index: 1;
+                bottom: 100%;
+                left: 50%;
+                margin-left: -60px;
+            }
+
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+            }
+
+            td.global-namespace {
+                color: grey;
+            }
+            td.stability-violates {
+                border: 2px solid darkred;
+            }
+        </style>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

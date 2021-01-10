@@ -58,4 +58,19 @@ class Package
 
         return $this;
     }
+
+    public function hasInterfaces(): bool
+    {
+        return 0 !== count($this->packageInterfaces);
+    }
+
+    public function calculateStability()
+    {
+        foreach ($this->packageClasses as $class) {
+            $class->calculateStability();
+        }
+        foreach ($this->packageInterfaces as $interface) {
+            $interface->calculateStability();
+        }
+    }
 }

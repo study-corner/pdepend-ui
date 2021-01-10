@@ -6,9 +6,16 @@ namespace App\Entity;
 abstract class PackageItem implements PackageItemInterface
 {
     protected string $name = '';
+    /**
+     * @var Efferent[]
+     */
     protected array $efferents = [];
+    /**
+     * @var Afferent[]
+     */
     protected array $afferents = [];
     protected string $file = '';
+    protected float $stability = 0.0;
 
     public function getName(): string
     {
@@ -56,5 +63,24 @@ abstract class PackageItem implements PackageItemInterface
         $this->file = $file;
 
         return $this;
+    }
+
+    public function calculateStability()
+    {
+        $out = count($this->efferents);
+        $in = count($this->afferents);
+
+
+        $division = $in + $out;
+        if ($division === 0) {
+            $this->stability = -1;
+            return;
+        }
+        $this->stability = round($out / $division, 2);
+    }
+
+    public function getStability(): float
+    {
+        return $this->stability;
     }
 }

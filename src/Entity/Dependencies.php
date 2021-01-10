@@ -61,4 +61,63 @@ class Dependencies
     {
         return null !== $this->generated && null !== $this->pdepend;
     }
+
+    public function calculateStability()
+    {
+        foreach ($this->packages as $package) {
+            $package->calculateStability();
+        }
+
+        $this->updateEfferentsStability();
+    }
+
+    private function updateEfferentsStability()
+    {
+        foreach ($this->packages as $package) {
+            foreach ($package->getPackageClasses() as $class) {
+                foreach ($class->getEfferents() as $efferent) {
+                    $stability = $this->findPackageItemStability($efferent);
+                    $efferent->setStability($stability);
+                }
+                foreach ($class->getAfferents() as $afferent) {
+                    $stability = $this->findPackageItemStability($afferent);
+                    $afferent->setStability($stability);
+                }
+            }
+
+            foreach ($package->getPackageInterfaces() as $interface) {
+                foreach ($interface->getEfferents() as $efferent) {
+                    $stability = $this->findPackageItemStability($efferent);
+                    $efferent->setStability($stability);
+                }
+                foreach ($interface->getAfferents() as $afferent) {
+                    $stability = $this->findPackageItemStability($afferent);
+                    $afferent->setStability($stability);
+                }
+            }
+        }
+    }
+
+    private function findPackageItemStability(Ferent $ferent): float
+    {
+        $name = $ferent->getName();
+        $namespace = $ferent->getNamespace();
+
+        foreach ($this->packages as $package) {
+            if ($package->getPackageName() === $namespace) {
+                foreach ($package->getPackageClasses() as $class) {
+                    if ($class->getName() === $name) {
+                        return $class->getStability();
+                    }
+                }
+                foreach ($package->getPackageInterfaces() as $interface) {
+                    if ($interface->getName() === $name) {
+                        return $interface->getStability();
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
 }

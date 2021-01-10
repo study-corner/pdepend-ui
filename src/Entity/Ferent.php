@@ -7,6 +7,7 @@ abstract class Ferent implements FerentInterface
 {
     protected string $namespace = '';
     protected string $name = '';
+    protected float $stability = 0.00;
 
     public function getNamespace(): string
     {
@@ -28,6 +29,18 @@ abstract class Ferent implements FerentInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getStability(): float
+    {
+        return $this->stability;
+    }
+
+    public function setStability(float $stability): self
+    {
+        $this->stability = $stability;
 
         return $this;
     }
